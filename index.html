@@ -12,27 +12,22 @@
         .confidential-tag { color: #d31145; font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .gen-date { font-size: 11px; color: #666; margin-top: 2px; }
         .btn-pdf { background: #d31145; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        
         .input-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         .setup-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
         .market-box { background: #fff5f6; border: 1px solid #d31145; padding: 15px; border-radius: 6px; }
-        
         .input-group { margin-bottom: 12px; display: flex; flex-direction: column; }
         label { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; color: #d31145; }
         input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em; }
-        
         .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: #2c3e50; color: white; padding: 12px; border-radius: 6px; text-align: center; border-bottom: 3px solid #ffbc00; }
         .stat-val { font-size: 1.2em; font-weight: bold; color: #ffbc00; display: block; }
         .cn-sub { font-size: 0.75em; display: block; opacity: 0.8; font-weight: normal; margin-bottom: 2px; }
-        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10.5px; }
         th { background: #d31145; color: white; padding: 8px 5px; text-align: left; vertical-align: top; }
         td { padding: 6px 5px; border-bottom: 1px solid #eee; }
         .total-row { background: #fdf2f4; font-weight: bold; }
         .perc-col { background-color: #f0fdf4; color: #166534; font-weight: bold; text-align: center; }
         .switch-highlight { background-color: #fff9c4; border-left: 4px solid #fbc02d !important; }
-        
         .disclaimer { margin-top: 25px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; font-size: 10px; color: #666; text-align: center; line-height: 1.4; }
         @media print { .no-print { display: none !important; } .card { box-shadow: none; border: none; } }
         .hidden { display: none !important; }
@@ -74,6 +69,10 @@
             <div id="switchGroup" class="input-group hidden">
                 <label style="color:#fbc02d">切换年份 / Switch to Income at Year</label>
                 <input type="number" id="switchYear" value="15" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>演示年限 / Duration (Years)</label>
+                <input type="number" id="tIn" value="30" min="1" max="100" oninput="calc()">
             </div>
         </div>
 
@@ -153,7 +152,7 @@
         const strat = document.getElementById('strat').value;
         const divRate = parseFloat(document.getElementById('dIn').value) / 100;
         const sYear = parseInt(document.getElementById('switchYear').value) || 15;
-        const t = 30;
+        const t = parseInt(document.getElementById('tIn').value) || 30; // Use input value
 
         let lbs = [], pVals = [], outlays = [], tBenefits = [];
         let curV = 0, tPaid = 0, tCash = 0, h = "";
