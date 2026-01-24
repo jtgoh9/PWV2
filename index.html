@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PWV 2.0 - Strategic Wealth Advisor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 15px; background-color: #f4f7f6; color: #333; font-size: 13px; }
+        .card { max-width: 1250px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-section { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #d31145; padding-bottom: 10px; margin-bottom: 20px; }
+        .confidential-tag { color: #d31145; font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .gen-date { font-size: 11px; color: #666; margin-top: 2px; }
+        .btn-pdf { background: #d31145; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        
+        .input-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .setup-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
+        .market-box { background: #fff5f6; border: 1px solid #d31145; padding: 15px; border-radius: 6px; }
+        
+        .input-group { margin-bottom: 12px; display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; color: #d31145; }
+        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em; }
+        
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: #2c3e50; color: white; padding: 12px; border-radius: 6px; text-align: center; border-bottom: 3px solid #ffbc00; }
+        .stat-val { font-size: 1.2em; font-weight: bold; color: #ffbc00; display: block; }
+        .cn-sub { font-size: 0.75em; display: block; opacity: 0.8; font-weight: normal; margin-bottom: 2px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10.5px; }
+        th { background: #d31145; color: white; padding: 8px 5px; text-align: left; vertical-align: top; }
+        td { padding: 6px 5px; border-bottom: 1px solid #eee; }
+        .total-row { background: #fdf2f4; font-weight: bold; }
+        .perc-col { background-color: #f0fdf4; color: #166534; font-weight: bold; text-align: center; }
+        .switch-highlight { background-color: #fff9c4; border-left: 4px solid #fbc02d !important; }
+        
+        .disclaimer { margin-top: 25px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; font-size: 10px; color: #666; text-align: center; line-height: 1.4; }
+        @media print { .no-print { display: none !important; } .card { box-shadow: none; border: none; } }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="card" id="pdfContent">
+    <div class="header-section">
+        <div>
+            <div class="confidential-tag">Strictly Private & Confidential</div>
+            <h1 style="color:#d31145; margin:0; font-size: 1.8em;">PWV 2.0</h1>
+            <div class="gen-date" id="displayDate">Report Generated: January 2026</div>
+            <p style="margin:10px 0 0 0;">
+                <span class="cn-sub">准备用于 / Prepared for:</span>
+                <input type="text" id="clientName" value="GOH JUI TEOW" style="border:none; border-bottom:1px solid #ccc; font-weight:bold; color:#333; width:180px; font-size:1.1em;">
+            </p>
+        </div>
+        <div class="no-print">
+            <button class="btn-pdf" onclick="downloadPDF()">下载 PDF 报告 / Download PDF</button>
+        </div>
+    </div>
+
+    <div class="input-container no-print">
+        <div class="setup-box">
+            <label class="cn-sub">1. 保单设置 / Policy Parameters</label>
+            <div class="input-group">
+                <label>年缴保费 / Annual Premium (S$)</label>
+                <input type="number" id="pIn" value="100000" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>分红策略 / Dividend Strategy</label>
+                <select id="strat" onchange="toggleInputs();">
+                    <option value="reinvest">再投资 (累计) / Reinvest Only</option>
+                    <option value="switch">累计后切换至分红 / Accumulate then Switch to Income</option>
+                    <option value="cash">即刻提取现金 / Immediate Income</option>
+                </select>
+            </div>
+            <div id="switchGroup" class="input-group hidden">
+                <label style="color:#fbc02d">切换年份 / Switch to Income at Year</label>
+                <input type="number" id="switchYear" value="15" oninput="calc()">
+            </div>
+        </div>
+
+        <div class="market-box">
+            <label class="cn-sub">2. 市场假设 / Market Scenarios</label>
+            <div class="input-group">
+                <label>市场回报率 / Gross Growth (%)</label>
+                <input type="number" id="rIn" value="8" oninput="calc()">
+            </div>
+            <div class="input-group" id="divGroup">
+                <label>预期分红率 / Dividend Yield (%)</label>
+                <input type="number" id="dIn" value="7.04" step="0.01" oninput="calc()">
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-card">
+            <span class="cn-sub">总已付保费</span>Total Premium Paid
+            <span class="stat-val" id="sOut">$0</span>
+        </div>
+        <div class="stat-card">
+            <span class="cn-sub">累计已收分红</span>Total Div. Received
+            <span class="stat-val" id="sDiv">$0</span>
+        </div>
+        <div class="stat-card">
+            <span class="cn-sub">当前保单价值</span>Policy Value
+            <span class="stat-val" id="sVal">$0</span>
+        </div>
+        <div class="stat-card">
+            <span class="cn-sub">总经济利益</span>Total Economic Benefit
+            <span class="stat-val" id="sTot">$0</span>
+            <span id="percReturn" style="font-size: 0.8em; color: #2ecc71; font-weight: bold;"></span>
+        </div>
+    </div>
+
+    <canvas id="mainChart" style="max-height: 320px; margin-bottom: 20px;"></canvas>
+
+    <table id="mainTable">
+        <thead>
+            <tr>
+                <th>年份<br>Year</th>
+                <th>缴付保费<br>Outlay</th>
+                <th>奖金 (+)<br>Bonuses</th>
+                <th>费用 (-)<br>Charges</th>
+                <th>当年分红<br>Yearly Div.</th>
+                <th>累计分红<br>Accum. Div.</th>
+                <th>保单价值<br>Policy Value</th>
+                <th>总利益<br>Total Benefit</th>
+                <th>回报率<br>Return %</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <div class="disclaimer">
+        <strong>一般免责声明 / General Disclaimer:</strong><br>
+        本演示仅供参考。实际数据将根据市场表现而有所不同。请参阅保险合同了解完整条款。<br>
+        This is for illustration purposes only. Actual numbers will vary based on market performance. Refer to contract.
+    </div>
+</div>
+
+<script>
+    let chart;
+
+    function toggleInputs() {
+        const strat = document.getElementById('strat').value;
+        document.getElementById('switchGroup').classList.toggle('hidden', strat !== 'switch');
+        document.getElementById('divGroup').classList.toggle('hidden', strat === 'reinvest');
+        calc();
+    }
+
+    function calc() {
+        const p = parseFloat(document.getElementById('pIn').value) || 0;
+        const grossR = parseFloat(document.getElementById('rIn').value) / 100;
+        const netR = grossR - 0.015; 
+        const strat = document.getElementById('strat').value;
+        const divRate = parseFloat(document.getElementById('dIn').value) / 100;
+        const sYear = parseInt(document.getElementById('switchYear').value) || 15;
+        const t = 30;
+
+        let lbs = [], pVals = [], outlays = [], tBenefits = [];
+        let curV = 0, tPaid = 0, tCash = 0, h = "";
+
+        let wB = p >= 42000 ? [0.03, 0.04, 0.05] : (p >= 24000 ? [0.03, 0.04, 0.04] : [0.03, 0, 0]);
+
+        for (let y = 1; y <= t; y++) {
+            let wb = 0, ib = 0, pb = 0, sc = 0, annD = 0;
+            if (y <= 5) { curV += p; tPaid += p; }
+            if (y <= 3) wb = p * (wB[y-1] || 0);
+            if (y >= 8 && y <= 11) ib = p * 0.025;
+            if (y >= 8) pb = (curV * 0.004); 
+            if (y <= 7) sc = curV * 0.036;
+
+            curV += (wb + ib + pb - sc);
+            curV *= (1 + netR);
+            
+            let activeDiv = 0;
+            if (strat === 'cash') activeDiv = divRate;
+            if (strat === 'switch' && y >= sYear) activeDiv = divRate;
+
+            annD = curV * activeDiv;
+            curV -= annD;
+            tCash += annD;
+
+            let totalB = curV + tCash;
+            let retP = ((totalB / tPaid) * 100).toFixed(0);
+            let rowClass = (strat === 'switch' && y === sYear) ? 'switch-highlight' : '';
+
+            lbs.push("Y" + y); pVals.push(Math.round(curV)); 
+            outlays.push(tPaid); tBenefits.push(Math.round(totalB));
+
+            h += `<tr class="${rowClass}">
+                <td>${y}</td>
+                <td>$${(y <= 5 ? p : 0).toLocaleString()}</td>
+                <td style="color:green">+$${Math.round(wb + ib + pb).toLocaleString()}</td>
+                <td style="color:#d31145">-$${Math.round(sc).toLocaleString()}</td>
+                <td style="color:#2ecc71">$${Math.round(annD).toLocaleString()}</td>
+                <td style="color:#2e7d32">$${Math.round(tCash).toLocaleString()}</td>
+                <td>$${Math.round(curV).toLocaleString()}</td>
+                <td class="total-row">$${Math.round(totalB).toLocaleString()}</td>
+                <td class="perc-col">${retP}%</td>
+            </tr>`;
+        }
+
+        document.getElementById('tableBody').innerHTML = h;
+        document.getElementById('sOut').innerText = "$" + tPaid.toLocaleString();
+        document.getElementById('sDiv').innerText = "$" + Math.round(tCash).toLocaleString();
+        document.getElementById('sVal').innerText = "$" + pVals[t-1].toLocaleString();
+        document.getElementById('sTot').innerText = "$" + tBenefits[t-1].toLocaleString();
+        document.getElementById('percReturn').innerText = ((tBenefits[t-1] / tPaid) * 100).toFixed(0) + "% ROI";
+
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: lbs, datasets: [
+                { label: 'Total Benefit', data: tBenefits, borderColor: '#2ecc71', fill: false, tension: 0.1 },
+                { label: 'Policy Value', data: pVals, borderColor: '#d31145', backgroundColor: 'rgba(211, 17, 69, 0.05)', fill: true, tension: 0.1 },
+                { label: 'Outlay', data: outlays, borderColor: '#333', borderDash: [5, 5], fill: false }
+            ]},
+            options: { animation: false, responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('pdfContent');
+        const name = document.getElementById('clientName').value || 'Client';
+        const opt = {
+            margin: 0.3,
+            filename: `PWV2.0_${name}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    window.onload = function() { toggleInputs(); };
+</script>
+</body>
+</html>
