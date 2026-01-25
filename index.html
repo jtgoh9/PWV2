@@ -8,7 +8,6 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 15px; background-color: #f4f7f6; color: #333; font-size: 13px; }
         
-        /* Secure Password Overlay */
         #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .auth-box { background: white; padding: 40px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 320px; }
         #errorMsg { color: #d31145; font-size: 11px; margin-top: 10px; font-weight: bold; display: none; }
@@ -23,11 +22,9 @@
         /* Column Manager Styling */
         .col-manager-wrapper { position: relative; display: inline-block; margin-top: 10px; }
         .col-btn { background: #f8f9fa; border: 1px solid #ddd; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; color: #555; display: flex; align-items: center; gap: 5px; }
-        .col-btn:hover { background: #eee; }
         .col-dropdown { position: absolute; top: 100%; left: 0; z-index: 100; background: white; border: 1px solid #ddd; border-radius: 4px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; width: 180px; }
         .col-dropdown label { color: #333; font-weight: normal; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
         
-        /* Tooltip 'i' Styling */
         .info-i { display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center; border-radius: 50%; background: #d31145; color: white; font-size: 10px; font-style: normal; cursor: help; margin-left: 5px; position: relative; }
         .info-i:hover::after { content: attr(data-tooltip); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 8px; border-radius: 4px; font-size: 10px; width: 200px; line-height: 1.4; z-index: 10; font-weight: normal; white-space: normal; text-align: center; }
 
@@ -63,9 +60,7 @@
     <div class="auth-box">
         <h2 style="color:#d31145; margin-top:0;">Wesion Secure Access</h2>
         <p style="font-size: 12px; color: #666;">Enter password to view PWV 2.0 Advisor Tool</p>
-        <input type="password" id="passInput" placeholder="Password" 
-               onkeydown="if(event.key==='Enter') checkPass()" 
-               style="width: 200px; padding: 10px; margin-bottom: 10px; text-align: center; border: 1px solid #ddd; border-radius: 4px;">
+        <input type="password" id="passInput" placeholder="Password" onkeydown="if(event.key==='Enter') checkPass()" style="width: 200px; padding: 10px; margin-bottom: 10px; text-align: center; border: 1px solid #ddd; border-radius: 4px;">
         <br>
         <button class="btn-pdf" style="width: 220px; margin: 0;" onclick="checkPass()">Unlock Access</button>
         <div id="errorMsg">Incorrect password. Access Denied.</div>
@@ -102,6 +97,16 @@
             </div>
             <div id="switchGroup" class="input-group hidden"><label>切换年龄 / Switch at Age</label><input type="number" id="switchAge" value="55" oninput="calc()"></div>
             
+            <div style="margin-top: 15px; background: #fdf2f4; padding: 10px; border-radius: 6px; border: 1px solid #d31145;">
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <input type="checkbox" id="compEnable" onchange="calc()"> 开启对比模式 / Enable Comparison
+                </label>
+                <div id="compRateGroup">
+                    <label style="font-size: 0.85em;">对比利率 / Comp. Rate (%)</label>
+                    <input type="number" id="compRate" value="1.5" step="0.1" oninput="calc()">
+                </div>
+            </div>
+
             <div class="col-manager-wrapper">
                 <div class="col-btn" onclick="toggleDropdown()">⚙ Customize Table Columns</div>
                 <div class="col-dropdown" id="colSelector">
@@ -177,7 +182,7 @@
             toggleInputs(); 
         } else {
             document.getElementById('errorMsg').style.display = 'block';
-            document.getElementById('passInput').value = ""; // Clear input on failure
+            document.getElementById('passInput').value = "";
         }
     }
 
@@ -217,6 +222,8 @@
         document.getElementById('rIn').value = 8;
         document.getElementById('rInPost').value = 5;
         document.getElementById('dIn').value = 7.04;
+        document.getElementById('compEnable').checked = false;
+        document.getElementById('compRate').value = 1.5;
         toggleInputs();
     }
 
@@ -240,13 +247,17 @@
         const sAge = parseInt(document.getElementById('switchAge').value) || 55;
         const t = parseInt(document.getElementById('tIn').value) || 30;
 
-        let lbs = [], pVals = [], outlays = [], tBenefits = [], curV = 0, tPaid = 0, tCash = 0, h = "";
+        // Comparison Data
+        const compEnable = document.getElementById('compEnable').checked;
+        const compR = parseFloat(document.getElementById('compRate').value) / 100;
+
+        let lbs = [], pVals = [], outlays = [], tBenefits = [], compVals = [], curV = 0, tPaid = 0, tCash = 0, compV = 0, h = "";
         let wB = p >= 42000 ? [0.03, 0.04, 0.05] : (p >= 24000 ? [0.03, 0.04, 0.04] : [0.03, 0, 0]);
 
         for (let y = 1; y <= t; y++) {
             let age = startAge + y - 1;
             let wb = 0, ib = 0, pb = 0, sc = 0, annD = 0;
-            if (y <= 5) { curV += p; tPaid += p; }
+            if (y <= 5) { curV += p; tPaid += p; compV += p; }
             if (y <= 3) wb = p * (wB[y-1] || 0);
             if (y >= 8 && y <= 11) ib = p * 0.025;
             if (y >= 8) pb = (curV * 0.004);
@@ -255,6 +266,9 @@
             curV += (wb + ib + pb - sc);
             let currentNetGrowth = (strat === 'switch' && age >= sAge) ? grossR2 : grossR1;
             curV *= (1 + currentNetGrowth);
+            
+            // Comparison compound
+            compV *= (1 + compR);
             
             if (strat !== 'reinvest' && (strat === 'cash' || age >= sAge)) {
                 annD = curV * divRate;
@@ -266,6 +280,7 @@
             let retP = tPaid > 0 ? ((totalB / tPaid) * 100).toFixed(0) : 0;
             
             lbs.push(age); pVals.push(Math.round(curV)); outlays.push(tPaid); tBenefits.push(Math.round(totalB));
+            compVals.push(Math.round(compV));
 
             h += `<tr class="${(strat === 'switch' && age === sAge) ? 'switch-highlight' : ''}" onclick="this.classList.toggle('selected-row')">
                 <td>${y} / ${age}</td>
@@ -288,12 +303,23 @@
         
         updateTableColumns();
         if (chart) chart.destroy();
+
+        let ds = [
+            { label: 'Total Benefit', data: tBenefits, borderColor: '#2ecc71', fill: false, tension: 0.1, z: 10 },
+            { label: 'Total Outlay', data: outlays, borderColor: '#333', borderDash: [5, 5], fill: false, tension: 0.1, pointRadius: 0 }
+        ];
+
+        if (strat !== 'reinvest') {
+            ds.splice(1, 0, { label: 'Policy Value', data: pVals, borderColor: '#d31145', fill: true, backgroundColor: 'rgba(211, 17, 69, 0.05)', tension: 0.1 });
+        }
+
+        if (compEnable) {
+            ds.push({ label: `Comp. @ ${document.getElementById('compRate').value}%`, data: compVals, borderColor: '#fbc02d', borderDash: [2, 2], fill: false, tension: 0.1 });
+        }
+
         chart = new Chart(document.getElementById('mainChart'), {
             type: 'line',
-            data: { labels: lbs, datasets: [
-                { label: 'Total Benefit', data: tBenefits, borderColor: '#2ecc71', fill: false, tension: 0.1 },
-                { label: 'Total Outlay', data: outlays, borderColor: '#333', borderDash: [5, 5], fill: false, tension: 0.1, pointRadius: 0 }
-            ]},
+            data: { labels: lbs, datasets: ds },
             options: { animation: false, responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { title: { display: true, text: 'Attained Age' } }, y: { ticks: { callback: v => '$' + v.toLocaleString() } } } }
         });
     }
