@@ -2,24 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Wesion: PWV 2.0 Strategic Advisor</title>
+    <title>PWV 2.0 - Strategic Wealth Advisor</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 15px; background-color: #f4f7f6; color: #333; font-size: 13px; }
         
-        /* Secure Password Overlay - AWV Style */
         #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .auth-box { background: white; padding: 40px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 320px; }
         #errorMsg { color: #d31145; font-size: 11px; margin-top: 10px; font-weight: bold; display: none; }
         
-        .card { max-width: 1250px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card { max-width: 1300px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-section { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #d31145; padding-bottom: 10px; margin-bottom: 20px; }
         .confidential-tag { color: #d31145; font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         
         .btn-pdf { background: #d31145; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-left: 5px; }
         .btn-clear { background: #666; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         
+        /* Column Manager Styling */
+        .col-manager-wrapper { position: relative; display: inline-block; margin-top: 10px; }
+        .col-btn { background: #f8f9fa; border: 1px solid #ddd; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; color: #555; display: flex; align-items: center; gap: 5px; }
+        .col-btn:hover { background: #eee; }
+        .col-dropdown { position: absolute; top: 100%; left: 0; z-index: 100; background: white; border: 1px solid #ddd; border-radius: 4px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; width: 180px; }
+        .col-dropdown label { color: #333; font-weight: normal; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        
+        /* Tooltip 'i' Styling */
+        .info-i { display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center; border-radius: 50%; background: #d31145; color: white; font-size: 10px; font-style: normal; cursor: help; margin-left: 5px; position: relative; }
+        .info-i:hover::after { content: attr(data-tooltip); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 8px; border-radius: 4px; font-size: 10px; width: 200px; line-height: 1.4; z-index: 10; font-weight: normal; white-space: normal; text-align: center; }
+
         .input-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         .setup-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
         .market-box { background: #fff5f6; border: 1px solid #d31145; padding: 15px; border-radius: 6px; }
@@ -34,23 +44,13 @@
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10.5px; }
         th { background: #d31145; color: white; padding: 8px 5px; text-align: left; vertical-align: top; }
-        td { padding: 6px 5px; border-bottom: 1px solid #eee; }
-        .total-row { background: #fdf2f4; font-weight: bold; }
-        .perc-col { background-color: #f0fdf4; color: #166534; font-weight: bold; text-align: center; }
-        .switch-highlight { background-color: #fff9c4; border-left: 4px solid #fbc02d !important; }
+        td { padding: 8px 5px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
         
-        .disclaimer-box { 
-            margin: 30px auto 10px auto; 
-            padding: 15px; 
-            max-width: 950px; 
-            font-size: 9px; 
-            color: #666; 
-            text-align: center; 
-            line-height: 1.6; 
-            border: 1.5px solid #d31145; 
-            border-radius: 8px;
-            background-color: #fcfcfc;
-        }
+        .selected-row { background-color: #e3f2fd !important; border-left: 5px solid #2196f3 !important; }
+        .switch-highlight { background-color: #fff9c4 !important; border-left: 5px solid #fbc02d !important; }
+        tr:hover { background-color: #f8f9fa; }
+
+        .disclaimer-box { margin: 30px auto 10px auto; padding: 15px; font-size: 9px; color: #666; text-align: center; line-height: 1.6; border: 1.5px solid #d31145; border-radius: 8px; background-color: #fcfcfc; }
         
         .hidden { display: none !important; }
         @media print { .no-print { display: none !important; } }
@@ -73,7 +73,7 @@
     <div class="header-section">
         <div>
             <div class="confidential-tag">Strictly Private & Confidential - FOR INTERNAL USE ONLY</div>
-            <h1 style="color:#d31145; margin:0; font-size: 1.8em;">PWV 2.0 - Wesion Edition</h1>
+            <h1 style="color:#d31145; margin:0; font-size: 1.8em;">PWV 2.0 - Strategic Wealth Advisor</h1>
             <p><input type="text" id="clientName" value="VALUED CLIENT" style="border:none; border-bottom:1px solid #ccc; font-weight:bold; width:180px; font-size: 1.1em;"></p>
         </div>
         <div class="no-print">
@@ -87,7 +87,7 @@
             <label class="cn-sub">1. 保单设置 / Policy Parameters</label>
             <div style="display: flex; gap: 10px;">
                 <div class="input-group" style="flex: 2;"><label>年缴保费 / Annual Premium (S$)</label><input type="number" id="pIn" value="100000" oninput="calc()"></div>
-                <div class="input-group" style="flex: 1;"><label>年龄 / Age</label><input type="number" id="ageIn" value="35" oninput="calc()"></div>
+                <div class="input-group" style="flex: 1;"><label>当前年龄 / Age</label><input type="number" id="ageIn" value="35" oninput="calc()"></div>
             </div>
             <div class="input-group">
                 <label>分红策略 / Dividend Strategy</label>
@@ -98,12 +98,38 @@
                 </select>
             </div>
             <div id="switchGroup" class="input-group hidden"><label>切换年龄 / Switch at Age</label><input type="number" id="switchAge" value="55" oninput="calc()"></div>
-            <div class="input-group"><label>演示年限 / Duration (Years)</label><input type="number" id="tIn" value="30" oninput="calc()"></div>
+            
+            <div class="col-manager-wrapper">
+                <div class="col-btn" onclick="toggleDropdown()">⚙ Customize Table Columns</div>
+                <div class="col-dropdown" id="colSelector">
+                    <label><input type="checkbox" checked data-col="2"> Outlay</label>
+                    <label><input type="checkbox" checked data-col="3"> Bonuses</label>
+                    <label><input type="checkbox" checked data-col="4"> Charges</label>
+                    <label><input type="checkbox" checked data-col="5"> Yearly Div.</label>
+                    <label><input type="checkbox" checked data-col="6"> Accum. Div.</label>
+                    <label><input type="checkbox" checked data-col="7"> Policy Value</label>
+                    <label><input type="checkbox" checked data-col="8"> Total Benefit</label>
+                    <label><input type="checkbox" checked data-col="9"> Return %</label>
+                </div>
+            </div>
         </div>
+
         <div class="market-box">
             <label class="cn-sub">2. 市场假设 / Market Scenarios</label>
-            <div class="input-group"><label>市场回报率 / Gross Growth (%)</label><input type="number" id="rIn" value="8" oninput="calc()"></div>
+            
+            <div class="input-group">
+                <label>Accumulation Growth (Gross %) <i class="info-i" data-tooltip="Returns shown are gross figures before the 1.5% p.a. Fund Management Charge (FMC).">i</i></label>
+                <input type="number" id="rIn" value="8" oninput="calc()">
+            </div>
+            
+            <div id="incomeGrowthGroup" class="input-group hidden">
+                <label>Income Phase Growth (Gross %) <i class="info-i" data-tooltip="Expected annual growth during the income-drawing phase, before 1.5% FMC.">i</i></label>
+                <input type="number" id="rInPost" value="5" oninput="calc()">
+            </div>
+
             <div class="input-group" id="divGroup"><label>预期分红率 / Div. Yield (%)</label><input type="number" id="dIn" value="7.04" oninput="calc()"></div>
+            
+            <div class="input-group"><label>演示年限 / Duration (Years)</label><input type="number" id="tIn" value="30" oninput="calc()"></div>
         </div>
     </div>
 
@@ -112,7 +138,7 @@
         <div class="stat-card" id="divStatCard"><span class="cn-sub">累计已收分红</span>Total Div. Paid<span class="stat-val" id="sDiv">$0</span></div>
         <div class="stat-card"><span class="cn-sub">当前保单价值</span>Policy Value<span class="stat-val" id="sVal">$0</span></div>
         <div class="stat-card"><span class="cn-sub">总经济利益</span>Total Benefit<span class="stat-val" id="sTot">$0</span></div>
-        <div class="stat-card"><span class="cn-sub">总回报率</span>Total Return %<span class="stat-val" id="sPerc">0%</span></div>
+        <div class="stat-card"><span class="cn-sub">总回报率</span>Return %<span class="stat-val" id="sPerc">0%</span></div>
     </div>
 
     <canvas id="mainChart" style="max-height: 300px; margin-bottom: 20px;"></canvas>
@@ -120,25 +146,24 @@
     <table id="mainTable">
         <thead>
             <tr>
-                <th>年份<br>Year</th>
-                <th>年龄<br>Age</th>
-                <th>缴付保费<br>Outlay</th>
-                <th>奖金 (+)<br>Bonuses</th>
-                <th>费用 (-)<br>Charges</th>
-                <th class="div-col">年度分红<br>Yearly Div.</th>
-                <th class="div-col">累计分红<br>Accum. Div.</th>
-                <th>保单价值<br>Policy Value</th>
-                <th>总利益<br>Total Benefit</th>
-                <th>回报率<br>Return %</th>
+                <th>年份 / 年龄<br>Year / Age</th>
+                <th data-col="2">缴付保费<br>Outlay</th>
+                <th data-col="3">奖金 (+)<br>Bonuses</th>
+                <th data-col="4">费用 (-)<br>Charges</th>
+                <th data-col="5">年度分红<br>Yearly Div.</th>
+                <th data-col="6">累计分红<br>Accum. Div.</th>
+                <th data-col="7">保单价值<br>Policy Value</th>
+                <th data-col="8">总利益<br>Total Benefit</th>
+                <th data-col="9">回报率<br>Return %</th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
 
-    <div class="disclaimer-box" id="pdfDisclaimer">
+    <div class="disclaimer-box">
         <strong>一般免责声明 / General Disclaimer:</strong><br>
         本演示仅供参考。实际数据将根据市场表现而有所不同。请参阅保险合同了解完整条款。<br>
-        This is for illustration purposes only. Actual numbers will vary based on market performance. Refer to contract.
+        <b>Gross Return Note:</b> Fund growth inputs represent gross market performance. A 1.5% p.a. Fund Management Charge (FMC) is factored into the net policy value calculation.
     </div>
 </div>
 
@@ -147,21 +172,41 @@
 
     function checkPass() { 
         const pass = document.getElementById('passInput').value;
-        const error = document.getElementById('errorMsg');
         if (pass === SECRET_CODE) { 
             document.getElementById('authOverlay').style.display = 'none'; 
             document.getElementById('mainCard').classList.remove('hidden'); 
             toggleInputs(); 
         } else {
-            error.style.display = 'block';
-            document.getElementById('passInput').value = "";
-            document.getElementById('passInput').focus();
+            document.getElementById('errorMsg').style.display = 'block';
         }
     }
 
-    document.getElementById('passInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') checkPass();
+    function toggleDropdown() {
+        const dd = document.getElementById('colSelector');
+        dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.col-btn')) {
+            const dropdowns = document.getElementsByClassName("col-dropdown");
+            for (let i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].style.display === 'block') dropdowns[i].style.display = 'none';
+            }
+        }
+    }
+
+    document.querySelectorAll('#colSelector input').forEach(cb => {
+        cb.addEventListener('change', updateTableColumns);
     });
+
+    function updateTableColumns() {
+        document.querySelectorAll('#colSelector input').forEach(cb => {
+            const colIdx = cb.getAttribute('data-col');
+            const cells = document.querySelectorAll(`[data-col="${colIdx}"]`);
+            cells.forEach(c => c.style.display = cb.checked ? '' : 'none');
+        });
+    }
 
     function clearAll() {
         document.getElementById('clientName').value = "VALUED CLIENT";
@@ -171,6 +216,7 @@
         document.getElementById('switchAge').value = 55;
         document.getElementById('tIn').value = 30;
         document.getElementById('rIn').value = 8;
+        document.getElementById('rInPost').value = 5;
         document.getElementById('dIn').value = 7.04;
         toggleInputs();
     }
@@ -178,32 +224,29 @@
     let chart;
     function toggleInputs() {
         const strat = document.getElementById('strat').value;
-        const isReinvest = strat === 'reinvest';
         document.getElementById('switchGroup').classList.toggle('hidden', strat !== 'switch');
-        document.getElementById('divGroup').classList.toggle('hidden', isReinvest);
-        document.getElementById('divStatCard').classList.toggle('hidden', isReinvest);
-        document.querySelectorAll('.div-col').forEach(el => el.style.display = isReinvest ? 'none' : 'table-cell');
+        document.getElementById('incomeGrowthGroup').classList.toggle('hidden', strat !== 'switch');
+        document.getElementById('divGroup').classList.toggle('hidden', strat === 'reinvest');
+        document.getElementById('divStatCard').classList.toggle('hidden', strat === 'reinvest');
         calc();
     }
 
     function calc() {
         const p = parseFloat(document.getElementById('pIn').value) || 0;
         const startAge = parseInt(document.getElementById('ageIn').value) || 0;
-        const grossR = parseFloat(document.getElementById('rIn').value) / 100;
-        const netR = grossR - 0.015; 
+        const grossR1 = (parseFloat(document.getElementById('rIn').value) / 100) - 0.015; 
+        const grossR2 = (parseFloat(document.getElementById('rInPost').value) / 100) - 0.015; 
         const strat = document.getElementById('strat').value;
         const divRate = parseFloat(document.getElementById('dIn').value) / 100;
         const sAge = parseInt(document.getElementById('switchAge').value) || 55;
         const t = parseInt(document.getElementById('tIn').value) || 30;
 
         let lbs = [], pVals = [], outlays = [], tBenefits = [], curV = 0, tPaid = 0, tCash = 0, h = "";
-        
         let wB = p >= 42000 ? [0.03, 0.04, 0.05] : (p >= 24000 ? [0.03, 0.04, 0.04] : [0.03, 0, 0]);
 
         for (let y = 1; y <= t; y++) {
             let age = startAge + y - 1;
             let wb = 0, ib = 0, pb = 0, sc = 0, annD = 0;
-            
             if (y <= 5) { curV += p; tPaid += p; }
             if (y <= 3) wb = p * (wB[y-1] || 0);
             if (y >= 8 && y <= 11) ib = p * 0.025;
@@ -211,28 +254,31 @@
             if (y <= 7) sc = curV * 0.036;
 
             curV += (wb + ib + pb - sc);
-            curV *= (1 + netR);
+            let currentNetGrowth = (strat === 'switch' && age >= sAge) ? grossR2 : grossR1;
+            curV *= (1 + currentNetGrowth);
             
-            let activeDiv = 0;
-            if (strat === 'cash') activeDiv = divRate;
-            if (strat === 'switch' && age >= sAge) activeDiv = divRate;
-
-            annD = curV * activeDiv;
-            curV -= annD;
-            tCash += annD;
+            if (strat !== 'reinvest' && (strat === 'cash' || age >= sAge)) {
+                annD = curV * divRate;
+                curV -= annD;
+                tCash += annD;
+            }
 
             let totalB = curV + tCash;
             let retP = tPaid > 0 ? ((totalB / tPaid) * 100).toFixed(0) : 0;
             
-            lbs.push("Age " + age); pVals.push(Math.round(curV)); outlays.push(tPaid); tBenefits.push(Math.round(totalB));
+            lbs.push(age); pVals.push(Math.round(curV)); outlays.push(tPaid); tBenefits.push(Math.round(totalB));
 
-            h += `<tr class="${(strat === 'switch' && age === sAge) ? 'switch-highlight' : ''}">
-                <td>${y}</td><td>${age}</td><td>$${(y <= 5 ? p : 0).toLocaleString()}</td>
-                <td style="color:green">+$${Math.round(wb + ib + pb).toLocaleString()}</td>
-                <td style="color:#d31145">-$${Math.round(sc).toLocaleString()}</td>
-                ${strat === 'reinvest' ? '' : `<td style="color:#2ecc71">$${Math.round(annD).toLocaleString()}</td><td style="color:#2e7d32">$${Math.round(tCash).toLocaleString()}</td>`}
-                <td>$${Math.round(curV).toLocaleString()}</td><td class="total-row">$${Math.round(totalB).toLocaleString()}</td>
-                <td class="perc-col">${retP}%</td></tr>`;
+            h += `<tr class="${(strat === 'switch' && age === sAge) ? 'switch-highlight' : ''}" onclick="this.classList.toggle('selected-row')">
+                <td>${y} / ${age}</td>
+                <td data-col="2">$${(y <= 5 ? p : 0).toLocaleString()}</td>
+                <td data-col="3" style="color:green">+$${Math.round(wb + ib + pb).toLocaleString()}</td>
+                <td data-col="4" style="color:#d31145">-$${Math.round(sc).toLocaleString()}</td>
+                <td data-col="5" style="color:#2ecc71">$${Math.round(annD).toLocaleString()}</td>
+                <td data-col="6" style="color:#2e7d32">$${Math.round(tCash).toLocaleString()}</td>
+                <td data-col="7">$${Math.round(curV).toLocaleString()}</td>
+                <td data-col="8" class="total-row">$${Math.round(totalB).toLocaleString()}</td>
+                <td data-col="9" class="perc-col">${retP}%</td>
+            </tr>`;
         }
         document.getElementById('tableBody').innerHTML = h;
         document.getElementById('sOut').innerText = "$" + tPaid.toLocaleString();
@@ -241,59 +287,20 @@
         document.getElementById('sTot').innerText = "$" + tBenefits[t-1].toLocaleString();
         document.getElementById('sPerc').innerText = (tPaid > 0 ? ((tBenefits[t-1] / tPaid) * 100).toFixed(0) : 0) + "%";
         
+        updateTableColumns();
         if (chart) chart.destroy();
-
-        let datasets = [
-            { label: 'Total Benefit', data: tBenefits, borderColor: '#2ecc71', fill: false, tension: 0.1, pointHitRadius: 15 },
-            { label: 'Total Outlay', data: outlays, borderColor: '#333', borderDash: [5, 5], fill: false, tension: 0.1, pointRadius: 0 }
-        ];
-
-        // Logic: If reinvesting, Total Benefit = Policy Value. Show only one line.
-        // If not reinvesting, show Policy Value as a separate shaded area.
-        if (strat !== 'reinvest') {
-            datasets.splice(1, 0, { 
-                label: 'Policy Value', 
-                data: pVals, 
-                borderColor: '#d31145', 
-                fill: true, 
-                backgroundColor: 'rgba(211, 17, 69, 0.05)', 
-                tension: 0.1, 
-                pointHitRadius: 15 
-            });
-        }
-
         chart = new Chart(document.getElementById('mainChart'), {
             type: 'line',
-            data: { labels: lbs, datasets: datasets },
-            options: { 
-                animation: false, responsive: true, maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    tooltip: {
-                        enabled: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) label += ': ';
-                                if (context.parsed.y !== null) label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'SGD', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
-            }
+            data: { labels: lbs, datasets: [
+                { label: 'Total Benefit', data: tBenefits, borderColor: '#2ecc71', fill: false, tension: 0.1 },
+                { label: 'Total Outlay', data: outlays, borderColor: '#333', borderDash: [5, 5], fill: false, tension: 0.1, pointRadius: 0 }
+            ]},
+            options: { animation: false, responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { title: { display: true, text: 'Attained Age' } }, y: { ticks: { callback: v => '$' + v.toLocaleString() } } } }
         });
     }
 
     function downloadPDF() { 
-        html2pdf().set({ 
-            margin: 0.3, 
-            filename: `PWV2.0_Wesion_${document.getElementById('clientName').value}.pdf`, 
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { format: 'a4', orientation: 'landscape' } 
-        }).from(document.getElementById('mainCard')).save(); 
+        html2pdf().set({ margin: 0.3, filename: `PWV2.0_Report.pdf`, jsPDF: { format: 'a4', orientation: 'landscape' } }).from(document.getElementById('mainCard')).save(); 
     }
 </script>
 </body>
