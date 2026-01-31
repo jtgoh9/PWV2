@@ -24,21 +24,28 @@
         .col-grid label { display: flex; align-items: center; gap: 12px; cursor: pointer; color: #d31145; font-weight: bold; font-size: 12px; }
         .col-grid input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; accent-color: #3b82f6; }
 
-        .input-container { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .input-container { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 15px; margin-bottom: 20px; }
         .setup-box, .market-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
         .withdraw-box { background: #fdf2f4; border: 1.5px solid #d31145; padding: 15px; border-radius: 6px; }
         .input-group { margin-bottom: 12px; display: flex; flex-direction: column; }
         label { font-weight: bold; margin-bottom: 5px; font-size: 0.85em; color: #d31145; }
         input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9em; }
 
+        /* Multi-Lump Sum Table UI */
+        .ls-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; background: white; border-radius: 4px; overflow: hidden; font-size: 11px; }
+        .ls-table th { background: #d31145; color: white; padding: 4px; font-size: 10px; }
+        .ls-table td { padding: 4px; border: 1px solid #eee; }
+        .btn-add-ls { background: #2ecc71; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 10px; width: 100%; margin-top: 5px; }
+        .btn-rm-ls { color: #d31145; cursor: pointer; font-weight: bold; border: none; background: none; }
+
         .stats-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: #2c3e50; color: white; padding: 12px; border-radius: 6px; text-align: center; border-bottom: 3px solid #ffbc00; }
         .stat-val { font-size: 1.1em; font-weight: bold; color: #ffbc00; display: block; }
         .cn-sub { font-size: 0.7em; display: block; opacity: 0.8; font-weight: normal; margin-bottom: 2px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10.5px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px #eee; }
-        thead th { background-color: #d31145; color: white; padding: 10px 5px; text-align: center; border-bottom: 2px solid #b01c3e; }
-        tbody td { padding: 8px 5px; border-bottom: 1px solid #f0f0f0; text-align: center; color: #444; transition: background 0.2s; cursor: pointer; }
+        table#mainTable { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10.5px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px #eee; }
+        #mainTable thead th { background-color: #d31145; color: white; padding: 10px 5px; text-align: center; border-bottom: 2px solid #b01c3e; }
+        #mainTable tbody td { padding: 8px 5px; border-bottom: 1px solid #f0f0f0; text-align: center; color: #444; transition: background 0.2s; cursor: pointer; }
         .switch-highlight { background-color: #fffde7 !important; border-left: 6px solid #fbc02d !important; }
         .selected-row { background-color: #e3f2fd !important; border-left: 6px solid #2196f3 !important; }
         .lapse-row { background-color: #fee2e2 !important; color: #991b1b !important; }
@@ -89,11 +96,14 @@
 
         <div class="withdraw-box">
             <label>2. 提取设置 / Withdrawal Module</label>
-            <div style="display: flex; gap: 10px;">
-                <div class="input-group" style="flex:1"><label>Lump Sum</label><input type="number" id="lsAmt" value="0" oninput="calc()"></div>
-                <div class="input-group" style="flex:1"><label>At Age</label><input type="number" id="lsAge" value="50" oninput="calc()"></div>
-            </div>
-            <hr style="border:0; border-top:1px solid #ddd; margin:10px 0;">
+            <table class="ls-table" id="lsTable">
+                <thead><tr><th>Age</th><th>Lump Sum Amount</th><th></th></tr></thead>
+                <tbody id="lsBody"></tbody>
+            </table>
+            <button class="btn-add-ls" onclick="addLsRow()">+ Add Lump Sum Event</button>
+            
+            <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
+            
             <div style="display: flex; gap: 10px;">
                 <div class="input-group" style="flex:2"><label>Periodic (S$ p.a.)</label><input type="number" id="pAmt" value="0" oninput="calc()"></div>
                 <div class="input-group" style="flex:1"><label>Inc. %</label><input type="number" id="pGrow" value="3" oninput="calc()"></div>
@@ -145,13 +155,13 @@
             <tr>
                 <th>年份 / 年龄<br>Year / Age</th>
                 <th data-col="2">保费<br>Premium</th>
-                <th data-col="3">开门红奖金<br>Welcome</th>
-                <th data-col="4">特别奖金<br>Special</th>
-                <th data-col="5">保单费用<br>Charges</th>
-                <th data-col="6">提取<br>Withdraw</th>
-                <th data-col="7">分红<br>Yearly Div.</th>
-                <th data-col="8">累计分红<br>Accum. Div.</th>
-                <th data-col="9">保单价值<br>Policy Val</th>
+                <th data-col="3">奖金<br>Bonuses</th>
+                <th data-col="4">费用<br>Charges</th>
+                <th data-col="5">提取<br>Withdraw</th>
+                <th data-col="6">当年分红<br>Yearly Div.</th>
+                <th data-col="7">累计分红<br>Accum. Div.</th>
+                <th data-col="8">保单价值<br>Policy Val</th>
+                <th data-col="9">总利益<br>Total Benefit</th>
                 <th data-col="10">回报率<br>Return %</th>
             </tr>
         </thead>
@@ -194,6 +204,15 @@
         });
     }
 
+    function addLsRow() {
+        const body = document.getElementById('lsBody');
+        const row = body.insertRow();
+        row.innerHTML = `<td><input type="number" class="ls-age" value="50" oninput="calc()" style="width:40px; padding:2px;"></td>
+                         <td><input type="number" class="ls-val" value="0" oninput="calc()" style="width:100px; padding:2px;"></td>
+                         <td><button class="btn-rm-ls" onclick="this.parentElement.parentElement.remove(); calc();">×</button></td>`;
+        calc();
+    }
+
     function toggleInputs() {
         const strat = document.getElementById('strat').value;
         const isReinvest = strat === 'reinvest';
@@ -214,12 +233,19 @@
         const divRate = parseFloat(document.getElementById('dIn').value) / 100;
         const sAge = parseInt(document.getElementById('switchAge').value) || 65;
         
-        const lsAmt = parseFloat(document.getElementById('lsAmt').value) || 0;
-        const lsAge = parseInt(document.getElementById('lsAge').value);
+        // Periodic Withdrawal Inputs
         const pAmtBase = parseFloat(document.getElementById('pAmt').value) || 0;
         const pGrow = (parseFloat(document.getElementById('pGrow').value) || 0) / 100;
         const pStart = parseInt(document.getElementById('pStart').value);
         const pEnd = parseInt(document.getElementById('pEnd').value);
+
+        // Multiple Lump Sum Mapping
+        let lsMap = {};
+        document.querySelectorAll('#lsBody tr').forEach(row => {
+            let age = parseInt(row.querySelector('.ls-age').value);
+            let amt = parseFloat(row.querySelector('.ls-val').value) || 0;
+            lsMap[age] = (lsMap[age] || 0) + amt;
+        });
 
         let lbs = [], pVals = [], outlays = [], tBenefits = [], curV = 0, tPaid = 0, tCash = 0, tWd = 0, h = "";
         let wB = p >= 42000 ? [0.03, 0.04, 0.05] : (p >= 24000 ? [0.03, 0.04, 0.04] : [0.03, 0, 0]);
@@ -246,14 +272,14 @@
                     curV -= sc;
                 }
 
+                // Process Multiple Withdrawals
                 let reqWd = 0;
-                if (age === lsAge) reqWd += lsAmt;
+                if (lsMap[age]) reqWd += lsMap[age];
                 if (age >= pStart && age <= pEnd) reqWd += pAmtBase * Math.pow(1 + pGrow, age - pStart);
                 
                 wd = Math.min(reqWd, curV);
                 curV -= wd; tWd += wd;
 
-                // Dividend logic including Immediate Income
                 if (strat === 'cash' || (strat === 'switch' && age >= sAge)) {
                     annD = curV * divRate;
                     curV -= annD; tCash += annD;
@@ -270,7 +296,7 @@
                 <td data-col="3">$${rd(wb).toLocaleString()}</td>
                 <td data-col="4">$${rd(ib + pb).toLocaleString()}</td>
                 <td data-col="5" style="color:#991b1b">-$${rd(sc).toLocaleString()}</td>
-                <td data-col="6" class="withdraw-col">$${rd(wd).toLocaleString()}</td>
+                <td data-col="6" style="background-color:#fff1f2; color:#be123c; font-weight:bold;">$${rd(wd).toLocaleString()}</td>
                 <td data-col="7">$${rd(annD).toLocaleString()}</td>
                 <td data-col="8">$${rd(tCash).toLocaleString()}</td>
                 <td data-col="9" style="font-weight:600">$${rd(curV).toLocaleString()}</td>
@@ -290,8 +316,9 @@
     }
 
     function clearAll() {
+        document.getElementById('clientName').value = "VALUED CLIENT";
         document.getElementById('pIn').value = 100000; document.getElementById('ageIn').value = 40;
-        document.getElementById('lsAmt').value = 0; document.getElementById('pAmt').value = 0;
+        document.getElementById('pAmt').value = 0; document.getElementById('lsBody').innerHTML = "";
         document.getElementById('pGrow').value = 3; document.getElementById('strat').value = "reinvest";
         document.getElementById('fmcIn').value = 1.50;
         document.querySelectorAll('#colBox input').forEach(cb => cb.checked = true);
