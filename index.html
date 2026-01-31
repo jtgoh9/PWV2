@@ -9,16 +9,16 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 15px; background-color: #f4f7f6; color: #333; font-size: 13px; }
         #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .auth-box { background: white; padding: 40px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 320px; }
-        .card { max-width: 1400px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card { max-width: 1450px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-section { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #d31145; padding-bottom: 10px; margin-bottom: 20px; }
         .gen-date { font-size: 11px; color: #666; margin-top: 5px; }
         .btn-pdf { background: #d31145; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-left: 5px; }
         .btn-clear { background: #666; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         
+        /* Screenshot-matched Column Manager */
         .col-manager-container { margin-top: 15px; position: relative; }
         .col-dropdown-btn { background: #eee; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; color: #333; display: inline-flex; align-items: center; gap: 8px; }
-        .col-dropdown-btn::after { content: '▼'; font-size: 10px; color: #666; }
-        
+        .col-dropdown-btn::after { content: '▼'; font-size: 10px; }
         .col-box { position: absolute; top: 100%; left: 0; z-index: 100; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; width: 600px; margin-top: 8px; }
         .col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 40px; }
         .col-grid label { display: flex; align-items: center; gap: 12px; cursor: pointer; color: #d31145; font-weight: bold; font-size: 12px; }
@@ -31,21 +31,20 @@
         label { font-weight: bold; margin-bottom: 5px; font-size: 0.85em; color: #d31145; }
         input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9em; }
 
-        /* Multi-Lump Sum Table UI */
-        .ls-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; background: white; border-radius: 4px; overflow: hidden; font-size: 11px; }
-        .ls-table th { background: #d31145; color: white; padding: 4px; font-size: 10px; }
+        .ls-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; background: white; border-radius: 4px; font-size: 11px; }
+        .ls-table th { background: #d31145; color: white; padding: 4px; font-size: 10px; text-align: left; }
         .ls-table td { padding: 4px; border: 1px solid #eee; }
-        .btn-add-ls { background: #2ecc71; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 10px; width: 100%; margin-top: 5px; }
-        .btn-rm-ls { color: #d31145; cursor: pointer; font-weight: bold; border: none; background: none; }
+        .btn-add-ls { background: #2ecc71; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 10px; width: 100%; font-weight: bold; }
 
         .stats-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: #2c3e50; color: white; padding: 12px; border-radius: 6px; text-align: center; border-bottom: 3px solid #ffbc00; }
         .stat-val { font-size: 1.1em; font-weight: bold; color: #ffbc00; display: block; }
         .cn-sub { font-size: 0.7em; display: block; opacity: 0.8; font-weight: normal; margin-bottom: 2px; }
 
-        table#mainTable { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10.5px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px #eee; }
-        #mainTable thead th { background-color: #d31145; color: white; padding: 10px 5px; text-align: center; border-bottom: 2px solid #b01c3e; }
-        #mainTable tbody td { padding: 8px 5px; border-bottom: 1px solid #f0f0f0; text-align: center; color: #444; transition: background 0.2s; cursor: pointer; }
+        table#mainTable { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10.5px; border-radius: 8px; overflow: hidden; }
+        #mainTable thead th { background-color: #d31145; color: white; padding: 10px 5px; border-bottom: 2px solid #b01c3e; text-align: center; }
+        #mainTable tbody td { padding: 8px 5px; border-bottom: 1px solid #f0f0f0; text-align: center; color: #444; cursor: pointer; transition: 0.2s; }
+        
         .switch-highlight { background-color: #fffde7 !important; border-left: 6px solid #fbc02d !important; }
         .selected-row { background-color: #e3f2fd !important; border-left: 6px solid #2196f3 !important; }
         .lapse-row { background-color: #fee2e2 !important; color: #991b1b !important; }
@@ -84,7 +83,7 @@
             <div class="input-group"><label>Annual Premium (S$)</label><input type="number" id="pIn" value="100000" oninput="calc()"></div>
             <div class="input-group"><label>Current Age</label><input type="number" id="ageIn" value="40" oninput="calc()"></div>
             <div class="input-group">
-                <label>Strategy / 策略</label>
+                <label>Strategy / 分红策略</label>
                 <select id="strat" onchange="toggleInputs()">
                     <option value="reinvest">再投资 (累计) / Reinvest Only</option>
                     <option value="switch">累计后收益 / Accumulate then Income</option>
@@ -96,14 +95,9 @@
 
         <div class="withdraw-box">
             <label>2. 提取设置 / Withdrawal Module</label>
-            <table class="ls-table" id="lsTable">
-                <thead><tr><th>Age</th><th>Lump Sum Amount</th><th></th></tr></thead>
-                <tbody id="lsBody"></tbody>
-            </table>
+            <table class="ls-table"><tbody id="lsBody"></tbody></table>
             <button class="btn-add-ls" onclick="addLsRow()">+ Add Lump Sum Event</button>
-            
-            <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
-            
+            <hr style="border:0; border-top:1px solid #ddd; margin:10px 0;">
             <div style="display: flex; gap: 10px;">
                 <div class="input-group" style="flex:2"><label>Periodic (S$ p.a.)</label><input type="number" id="pAmt" value="0" oninput="calc()"></div>
                 <div class="input-group" style="flex:1"><label>Inc. %</label><input type="number" id="pGrow" value="3" oninput="calc()"></div>
@@ -119,7 +113,6 @@
             <div class="input-group"><label>Accumulation Growth %</label><input type="number" id="rIn" value="8" oninput="calc()"></div>
             <div class="input-group"><label>Income Phase Growth %</label><input type="number" id="rInPost" value="8" oninput="calc()"></div>
             <div class="input-group"><label>Manual FMC %</label><input type="number" id="fmcIn" value="1.50" step="0.1" oninput="calc()"></div>
-            <div class="input-group" id="divGroup"><label>Dividend Yield (%)</label><input type="number" id="dIn" value="7.04" oninput="calc()"></div>
             <div class="col-manager-container">
                 <div class="col-dropdown-btn" onclick="toggleColBox(event)">表格显示设置 / Table Columns</div>
                 <div class="col-box" id="colBox" onclick="event.stopPropagation()">
@@ -140,12 +133,12 @@
     </div>
 
     <div class="stats-bar">
-        <div class="stat-card"><span class="cn-sub">Total Paid</span><span class="stat-val" id="sOut">$0</span></div>
-        <div class="stat-card"><span class="cn-sub">Total Wd</span><span class="stat-val" id="sWd">$0</span></div>
-        <div class="stat-card" id="divStatCard"><span class="cn-sub">Total Div</span><span class="stat-val" id="sDiv">$0</span></div>
-        <div class="stat-card"><span class="cn-sub">End Value</span><span class="stat-val" id="sVal">$0</span></div>
-        <div class="stat-card"><span class="cn-sub">Total Benefit</span><span class="stat-val" id="sTot">$0</span></div>
-        <div class="stat-card"><span class="cn-sub">Return %</span><span class="stat-val" id="sPerc">0%</span></div>
+        <div class="stat-card"><span class="cn-sub">总已付保费 / Total Paid</span><span class="stat-val" id="sOut">$0</span></div>
+        <div class="stat-card"><span class="cn-sub">总提取金额 / Total Wd</span><span class="stat-val" id="sWd">$0</span></div>
+        <div class="stat-card" id="divStatCard"><span class="cn-sub">总现金分红 / Total Div</span><span class="stat-val" id="sDiv">$0</span></div>
+        <div class="stat-card"><span class="cn-sub">期末保单价值 / End Value</span><span class="stat-val" id="sVal">$0</span></div>
+        <div class="stat-card"><span class="cn-sub">总经济利益 / Total Benefit</span><span class="stat-val" id="sTot">$0</span></div>
+        <div class="stat-card"><span class="cn-sub">总回报率 / Return %</span><span class="stat-val" id="sPerc">0%</span></div>
     </div>
 
     <canvas id="mainChart" style="max-height: 280px; margin-bottom: 20px;"></canvas>
@@ -154,23 +147,23 @@
         <thead>
             <tr>
                 <th>年份 / 年龄<br>Year / Age</th>
-                <th data-col="2">保费<br>Premium</th>
-                <th data-col="3">奖金<br>Bonuses</th>
-                <th data-col="4">费用<br>Charges</th>
-                <th data-col="5">提取<br>Withdraw</th>
-                <th data-col="6">当年分红<br>Yearly Div.</th>
-                <th data-col="7">累计分红<br>Accum. Div.</th>
-                <th data-col="8">保单价值<br>Policy Val</th>
-                <th data-col="9">总利益<br>Total Benefit</th>
+                <th data-col="2">缴付保费<br>Premium</th>
+                <th data-col="3">开门红奖金<br>Welcome</th>
+                <th data-col="4">特别奖金<br>Special</th>
+                <th data-col="5">保单费用<br>Charges</th>
+                <th data-col="6">提取金额<br>Withdraw</th>
+                <th data-col="7">当年分红<br>Yearly Div.</th>
+                <th data-col="8">累计分红<br>Accum. Div.</th>
+                <th data-col="9">保单价值<br>Policy Val</th>
                 <th data-col="10">回报率<br>Return %</th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
 
-    <div class="disclaimer-container" style="margin-top:20px; text-align:center; font-size:9px; color:#666;">
+    <div class="disclaimer-container" style="margin-top:20px; text-align:center; font-size:9px; color:#666; border-top:1px solid #ddd; padding-top:10px;">
         本演示仅供参考。实际数据将根据市场表现而有所不同。请参阅保险合同了解完整条款。<br>
-        <strong>High-Charge Methodology:</strong> Supplementary charges (3.60%) are calculated post-growth and post-bonus.
+        This is for illustration purposes only. Supplementary charges are calculated post-growth as per official methodology.
     </div>
 </div>
 
@@ -197,6 +190,15 @@
     window.onclick = () => document.getElementById('colBox').style.display = 'none';
     document.querySelectorAll('#colBox input').forEach(cb => { cb.addEventListener('change', () => { updateTableColumns(); calc(); }); });
 
+    function addLsRow() {
+        const body = document.getElementById('lsBody');
+        const row = body.insertRow();
+        row.innerHTML = `<td>Age <input type="number" class="ls-age" value="50" oninput="calc()" style="width:35px;"></td>
+                         <td>$ <input type="number" class="ls-val" value="0" oninput="calc()" style="width:80px;"></td>
+                         <td><button onclick="this.parentElement.parentElement.remove(); calc();" style="color:red; border:none; background:none; cursor:pointer;">×</button></td>`;
+        calc();
+    }
+
     function updateTableColumns() {
         document.querySelectorAll('#colBox input').forEach(cb => {
             const colIdx = cb.getAttribute('data-col');
@@ -204,22 +206,12 @@
         });
     }
 
-    function addLsRow() {
-        const body = document.getElementById('lsBody');
-        const row = body.insertRow();
-        row.innerHTML = `<td><input type="number" class="ls-age" value="50" oninput="calc()" style="width:40px; padding:2px;"></td>
-                         <td><input type="number" class="ls-val" value="0" oninput="calc()" style="width:100px; padding:2px;"></td>
-                         <td><button class="btn-rm-ls" onclick="this.parentElement.parentElement.remove(); calc();">×</button></td>`;
-        calc();
-    }
-
     function toggleInputs() {
         const strat = document.getElementById('strat').value;
-        const isReinvest = strat === 'reinvest';
-        document.getElementById('checkDivY').checked = !isReinvest;
-        document.getElementById('checkDivA').checked = !isReinvest;
+        document.getElementById('checkDivY').checked = strat !== 'reinvest';
+        document.getElementById('checkDivA').checked = strat !== 'reinvest';
         document.getElementById('switchGroup').classList.toggle('hidden', strat !== 'switch');
-        document.getElementById('divStatCard').classList.toggle('hidden', isReinvest);
+        document.getElementById('divStatCard').classList.toggle('hidden', strat === 'reinvest');
         updateTableColumns(); calc();
     }
 
@@ -230,16 +222,12 @@
         const r1 = (parseFloat(document.getElementById('rIn').value) / 100) - fmc; 
         const r2 = (parseFloat(document.getElementById('rInPost').value) / 100) - fmc; 
         const strat = document.getElementById('strat').value;
-        const divRate = parseFloat(document.getElementById('dIn').value) / 100;
         const sAge = parseInt(document.getElementById('switchAge').value) || 65;
-        
-        // Periodic Withdrawal Inputs
         const pAmtBase = parseFloat(document.getElementById('pAmt').value) || 0;
         const pGrow = (parseFloat(document.getElementById('pGrow').value) || 0) / 100;
         const pStart = parseInt(document.getElementById('pStart').value);
         const pEnd = parseInt(document.getElementById('pEnd').value);
 
-        // Multiple Lump Sum Mapping
         let lsMap = {};
         document.querySelectorAll('#lsBody tr').forEach(row => {
             let age = parseInt(row.querySelector('.ls-age').value);
@@ -259,30 +247,20 @@
 
             if (!isLapsed) {
                 if (y <= 5) { curV += p; tPaid += p; }
-
                 wb = (y <= 3) ? p * (wB[y-1] || 0) : 0;
                 ib = (y >= 8 && y <= 11) ? p * 0.025 : 0;
                 pb = (y >= 8) ? (curV * 0.004) : 0;
                 curV += (wb + ib + pb);
-
                 curV *= (1 + ((strat === 'switch' && age >= sAge) ? r2 : r1));
+                if (y <= 7) { sc = curV * 0.036; curV -= sc; }
 
-                if (y <= 7) {
-                    sc = curV * 0.036;
-                    curV -= sc;
-                }
-
-                // Process Multiple Withdrawals
                 let reqWd = 0;
                 if (lsMap[age]) reqWd += lsMap[age];
                 if (age >= pStart && age <= pEnd) reqWd += pAmtBase * Math.pow(1 + pGrow, age - pStart);
-                
-                wd = Math.min(reqWd, curV);
-                curV -= wd; tWd += wd;
+                wd = Math.min(reqWd, curV); curV -= wd; tWd += wd;
 
                 if (strat === 'cash' || (strat === 'switch' && age >= sAge)) {
-                    annD = curV * divRate;
-                    curV -= annD; tCash += annD;
+                    annD = curV * 0.0704; curV -= annD; tCash += annD;
                 }
                 if (curV <= 0) isLapsed = true;
             }
@@ -300,7 +278,7 @@
                 <td data-col="7">$${rd(annD).toLocaleString()}</td>
                 <td data-col="8">$${rd(tCash).toLocaleString()}</td>
                 <td data-col="9" style="font-weight:600">$${rd(curV).toLocaleString()}</td>
-                <td data-col="10">${tPaid > 0 ? ((totalB / tPaid) * 100).toFixed(0) : 0}%</td>
+                <td data-col="10" style="color:#166534;font-weight:bold;">${tPaid > 0 ? ((totalB / tPaid) * 100).toFixed(0) : 0}%</td>
             </tr>`;
         }
         document.getElementById('tableBody').innerHTML = h;
@@ -316,13 +294,10 @@
     }
 
     function clearAll() {
-        document.getElementById('clientName').value = "VALUED CLIENT";
         document.getElementById('pIn').value = 100000; document.getElementById('ageIn').value = 40;
         document.getElementById('pAmt').value = 0; document.getElementById('lsBody').innerHTML = "";
-        document.getElementById('pGrow').value = 3; document.getElementById('strat').value = "reinvest";
-        document.getElementById('fmcIn').value = 1.50;
-        document.querySelectorAll('#colBox input').forEach(cb => cb.checked = true);
-        calc();
+        document.getElementById('strat').value = "reinvest"; document.getElementById('fmcIn').value = 1.50;
+        document.querySelectorAll('#colBox input').forEach(cb => cb.checked = true); calc();
     }
 
     function downloadPDF() { html2pdf().set({ margin: 0.3, filename: `PWV2.0_Report.pdf`, jsPDF: { format: 'a4', orientation: 'landscape' } }).from(document.getElementById('mainCard')).save(); }
