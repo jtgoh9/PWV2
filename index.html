@@ -243,6 +243,200 @@
             box-shadow: 0 10px 20px -5px rgba(211, 17, 69, 0.3);
         }
 
+        /* ==================== BONUS INFO SECTION ==================== */
+        .bonus-info-section {
+            margin-bottom: 30px;
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .bonus-toggle-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--slate-100) 0%, var(--slate-200) 100%);
+            border: none;
+            padding: 18px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'IBM Plex Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .bonus-toggle-btn:hover {
+            background: linear-gradient(135deg, var(--slate-200) 0%, var(--slate-300) 100%);
+        }
+
+        .bonus-toggle-btn span:first-child {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #bonusToggleIcon {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        #bonusToggleIcon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .bonus-info-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background: var(--slate-50);
+        }
+
+        .bonus-info-content.expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .bonus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 24px;
+        }
+
+        .bonus-card {
+            background: white;
+            border: 2px solid var(--slate-200);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .bonus-card:hover {
+            border-color: var(--aia-red);
+            box-shadow: 0 4px 12px rgba(211, 17, 69, 0.1);
+        }
+
+        .bonus-card.full-width {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3f2 100%);
+        }
+
+        .bonus-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--slate-200);
+        }
+
+        .bonus-icon {
+            font-size: 28px;
+        }
+
+        .bonus-card-header h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .bonus-card-body {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .bonus-period {
+            background: var(--aia-red);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .bonus-tiers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bonus-tier {
+            background: var(--slate-50);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--aia-red);
+        }
+
+        .bonus-tier strong {
+            display: block;
+            color: var(--aia-red);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .bonus-tier ul {
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .bonus-tier ul li {
+            margin: 4px 0;
+            color: var(--navy);
+        }
+
+        .bonus-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bonus-details p {
+            margin: 0;
+        }
+
+        .bonus-details strong {
+            color: var(--aia-red);
+            font-size: 18px;
+        }
+
+        .bonus-note {
+            color: var(--slate-600);
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .bonus-example {
+            background: var(--blue-50);
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: var(--navy);
+            font-weight: 600;
+            border-left: 3px solid var(--blue-500);
+        }
+
+        .bonus-notes-list {
+            margin: 0;
+            padding-left: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bonus-notes-list li {
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        .bonus-notes-list strong {
+            color: var(--aia-red);
+        }
+
         /* ==================== INPUT SECTION ==================== */
         .input-container {
             display: grid;
@@ -649,28 +843,187 @@
             }
         }
 
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 1200px) {
+        /* ==================== RESPONSIVE MOBILE/TABLET ==================== */
+        @media (max-width: 1400px) {
             .input-container {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
             .stats-bar {
                 grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .bonus-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
 
         @media (max-width: 768px) {
-            .header-section {
-                flex-direction: column;
+            body {
+                padding: 10px;
             }
 
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
+            .card {
+                padding: 20px 16px;
+                border-radius: 12px;
+            }
+
+            .header-section {
+                flex-direction: column;
+                gap: 20px;
             }
 
             h1 {
                 font-size: 32px;
+            }
+
+            #clientName {
+                width: 100%;
+                font-size: 16px;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-value {
+                font-size: 16px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .stat-label-cn {
+                font-size: 9px;
+            }
+
+            .input-container {
+                grid-template-columns: 1fr;
+            }
+
+            .input-box {
+                padding: 16px;
+            }
+
+            .input-box-header {
+                font-size: 12px;
+            }
+
+            .input-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .bonus-toggle-btn {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+
+            .bonus-grid {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .bonus-card {
+                padding: 14px;
+            }
+
+            .bonus-card-header h3 {
+                font-size: 16px;
+            }
+
+            .bonus-icon {
+                font-size: 24px;
+            }
+
+            #mainChart {
+                max-height: 250px;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #mainTable {
+                font-size: 10px;
+            }
+
+            #mainTable thead th {
+                padding: 10px 6px;
+                font-size: 9px;
+            }
+
+            #mainTable tbody td {
+                padding: 8px 6px;
+            }
+
+            .disclaimer {
+                font-size: 9px;
+                padding: 16px;
+            }
+
+            .col-manager-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+
+            .ls-table {
+                font-size: 11px;
+            }
+
+            .add-ls-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .bonus-info-content.expanded {
+                max-height: 3000px;
+            }
+
+            #mainTable {
+                font-size: 9px;
+            }
+
+            #mainTable thead th {
+                padding: 8px 4px;
+                font-size: 8px;
+            }
+
+            #mainTable tbody td {
+                padding: 6px 4px;
             }
         }
     </style>
@@ -706,6 +1059,82 @@
                 <div class="header-actions no-print">
                     <button class="btn btn-secondary" onclick="clearAllData()">Clear All</button>
                     <button class="btn btn-primary" onclick="downloadPDF()">Download Report</button>
+                </div>
+            </div>
+
+            <!-- BONUS DETAILS SECTION -->
+            <div class="bonus-info-section no-print">
+                <button class="bonus-toggle-btn" onclick="toggleBonusInfo()">
+                    <span>📋 Policy Bonuses & Benefits Details</span>
+                    <span id="bonusToggleIcon">▼</span>
+                </button>
+                <div id="bonusInfoContent" class="bonus-info-content">
+                    <div class="bonus-grid">
+                        <div class="bonus-card">
+                            <div class="bonus-card-header">
+                                <span class="bonus-icon">🎁</span>
+                                <h3>Welcome Bonus</h3>
+                            </div>
+                            <div class="bonus-card-body">
+                                <p class="bonus-period">Years 1-3 (on premium payment)</p>
+                                <div class="bonus-tiers">
+                                    <div class="bonus-tier">
+                                        <strong>Premium ≥ $42,000:</strong>
+                                        <ul>
+                                            <li>Year 1: 3% of premium</li>
+                                            <li>Year 2: 4% of premium</li>
+                                            <li>Year 3: 5% of premium</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bonus-tier">
+                                        <strong>Premium $24,000 - $41,999:</strong>
+                                        <ul>
+                                            <li>Year 1: 3% of premium</li>
+                                            <li>Year 2: 4% of premium</li>
+                                            <li>Year 3: 4% of premium</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bonus-tier">
+                                        <strong>Premium &lt; $24,000:</strong>
+                                        <ul>
+                                            <li>Year 1: 3% of premium</li>
+                                            <li>Year 2 & 3: None</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bonus-card">
+                            <div class="bonus-card-header">
+                                <span class="bonus-icon">💰</span>
+                                <h3>Investment Bonus</h3>
+                            </div>
+                            <div class="bonus-card-body">
+                                <p class="bonus-period">Years 8-11</p>
+                                <div class="bonus-details">
+                                    <p><strong>2.5%</strong> of annual premium</p>
+                                    <p class="bonus-note">Added each year from policy year 8 to 11</p>
+                                    <p class="bonus-example">Example: For $100,000 premium = $2,500/year</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bonus-card">
+                            <div class="bonus-card-header">
+                                <span class="bonus-icon">⭐</span>
+                                <h3>Performance Bonus</h3>
+                            </div>
+                            <div class="bonus-card-body">
+                                <p class="bonus-period">Year 8 onwards</p>
+                                <div class="bonus-details">
+                                    <p><strong>0.4%</strong> of policy value annually</p>
+                                    <p class="bonus-note">Calculated on policy value before growth</p>
+                                    <p class="bonus-example">Compounds over time as policy value grows</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -962,6 +1391,19 @@ function checkPassword() {
 }
 
 // ==================== UI CONTROLS ====================
+function toggleBonusInfo() {
+    const content = document.getElementById('bonusInfoContent');
+    const icon = document.getElementById('bonusToggleIcon');
+    
+    if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        icon.classList.remove('rotated');
+    } else {
+        content.classList.add('expanded');
+        icon.classList.add('rotated');
+    }
+}
+
 function toggleColumnManager() {
     const content = document.getElementById('colManagerContent');
     content.style.display = content.style.display === 'block' ? 'none' : 'block';
