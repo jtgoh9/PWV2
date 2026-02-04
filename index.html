@@ -1113,7 +1113,7 @@
                             <th class="col-charges">Charges<br>费用</th>
                             <th class="col-dividend hidden">Dividend<br>分红</th>
                             <th class="col-withdrawal hidden">Withdrawal<br>提取</th>
-                            <th>Policy Value<br>保单价值</th>
+                            <th class="col-policy-value">Policy Value<br>保单价值</th>
                             <th class="col-comparison hidden">Comp. Value<br>对比场景</th>
                             <th>Total Benefit<br>总利益</th>
                             <th style="width: 100px;">Return %<br>回报率</th>
@@ -1470,7 +1470,7 @@ function calculateProjection() {
                 <td class="td-charges" style="color:var(--aia-red)">-${formatCurrency(suppCharge)}</td>
                 <td class="col-dividend" style="color:var(--emerald);font-weight:600">${formatCurrency(yearDividend)}</td>
                 <td class="col-withdrawal" style="color:var(--amber);font-weight:600">${formatCurrency(yearWithdrawal)}</td>
-                <td style="font-weight:600">${formatCurrency(displayPolicyValue)}</td>
+                <td class="col-policy-value" style="font-weight:600">${formatCurrency(displayPolicyValue)}</td>
                 <td class="col-comparison comp-col">${formatCurrency(displayCompValue)}</td>
                 <td class="total-benefit-col">${formatCurrency(displayTotalBenefit)}</td>
                 <td style="font-weight:700;color:var(--navy)">${terminated ? '❌ Terminated' : returnPct + '%'}</td>
@@ -1480,6 +1480,14 @@ function calculateProjection() {
 
     // Update table
     document.getElementById('tableBody').innerHTML = tableHTML;
+
+    // Check if Policy Value = Total Benefit (no payouts scenario)
+    const hasDifferentValues = chartPolicyValues.some((val, idx) => val !== chartTotalBenefits[idx]);
+    
+    // Hide Policy Value column if it's the same as Total Benefit
+    document.querySelectorAll('.col-policy-value').forEach(el => {
+        el.classList.toggle('hidden', !hasDifferentValues);
+    });
 
     // Update stats
     const finalPolicyValue = chartPolicyValues[chartPolicyValues.length - 1] || 0;
@@ -1492,6 +1500,14 @@ function calculateProjection() {
     document.getElementById('statWithdrawals').textContent = formatCurrency(totalWithdrawals);
     document.getElementById('statTotalBenefit').textContent = formatCurrency(finalTotalBenefit);
     document.getElementById('statMultiplier').textContent = multiplier + 'x';
+
+    // Hide stat cards with zero values
+    document.getElementById('statPolicyValue').closest('.stat-card').style.display = 
+        finalPolicyValue === 0 ? 'none' : 'block';
+    document.getElementById('statDividends').closest('.stat-card').style.display = 
+        totalDividends === 0 ? 'none' : 'block';
+    document.getElementById('statWithdrawals').closest('.stat-card').style.display = 
+        totalWithdrawals === 0 ? 'none' : 'block';
 
     // Update column visibility
     document.querySelectorAll('.col-dividend').forEach(el => {
